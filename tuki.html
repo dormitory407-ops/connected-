@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>English Motivation Statement Reader</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 20px auto;
+      line-height: 1.6;
+    }
+    h1 {
+      text-align: center;
+    }
+    .buttons {
+      text-align: center;
+      margin: 20px 0;
+    }
+    button {
+      font-size: 16px;
+      padding: 8px 16px;
+      margin: 0 8px;
+      cursor: pointer;
+    }
+    .text-box {
+      border: 1px solid #ccc;
+      padding: 15px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      margin-bottom: 20px;
+    }
+    .slider-box {
+      text-align: center;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>English Motivation Statement</h1>
+
+  <div class="text-box" id="text">
+English Motivation Statement
+
+I would like to study nursing at Nayoro City University because I hope to support people's health and well-being while also contributing to a more sustainable society. Before deciding to pursue nursing, I was actively involved in environmental issues such as microplastics and ghost gear. Through volunteer activities and research projects, I learned the importance of protecting both people and the environment, as these two areas are deeply connected.
+
+My interest in nursing grew as I realized that environmental problems directly affect human health. For example, pollution and climate change increase the risks of various diseases, and vulnerable communities are often the most affected. By becoming a nurse, I want to care for individuals while also using my background in environmental awareness to promote healthier living conditions and raise awareness about environmental impacts.
+
+Nayoro City University attracts me because it emphasizes the value of life, community engagement, and practical learning. I believe that studying in such an environment will allow me to develop both the medical skills and the broader perspective needed to serve patients with empathy and responsibility. In the future, I hope to become a nurse who not only provides high-quality care but also educates people about the relationship between health and the environment.
+  </div>
+
+  <!-- Speed Slider -->
+  <div class="slider-box">
+    <label for="speed">Speed: </label>
+    <input type="range" id="speed" min="0.3" max="1.5" step="0.1" value="1">
+    <span id="speedValue">1.0</span>
+  </div>
+
+  <div class="buttons">
+    <button onclick="playText()">Play</button>
+    <button onclick="togglePause()">Pause / Resume</button>
+  </div>
+
+  <script>
+    const text = `English Motivation Statement
+
+I would like to study nursing at Nayoro City University because I hope to support people's health and well-being while also contributing to a more sustainable society. Before deciding to pursue nursing, I was actively involved in environmental issues such as microplastics and ghost gear. Through volunteer activities and research projects, I learned the importance of protecting both people and the environment, as these two areas are deeply connected.
+
+My interest in nursing grew as I realized that environmental problems directly affect human health. For example, pollution and climate change increase the risks of various diseases, and vulnerable communities are often the most affected. By becoming a nurse, I want to care for individuals while also using my background in environmental awareness to promote healthier living conditions and raise awareness about environmental impacts.
+
+Nayoro City University attracts me because it emphasizes the value of life, community engagement, and practical learning. I believe that studying in such an environment will allow me to develop both the medical skills and the broader perspective needed to serve patients with empathy and responsibility. In the future, I hope to become a nurse who not only provides high-quality care but also educates people about the relationship between health and the environment.`;
+
+    let utterance = null;
+
+    document.getElementById("speed").addEventListener("input", function() {
+      document.getElementById("speedValue").textContent = this.value;
+    });
+
+    function playText() {
+      window.speechSynthesis.cancel();
+
+      const speed = document.getElementById("speed").value;
+
+      utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = speed;
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function togglePause() {
+      const synth = window.speechSynthesis;
+      if (synth.paused) {
+        synth.resume();
+      } else if (synth.speaking) {
+        synth.pause();
+      }
+    }
+  </script>
+
+</body>
+</html>
