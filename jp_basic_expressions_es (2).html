@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>日本語基本表現集（スペイン語話者向け）</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+      color: #222;
+    }
+    header {
+      background: #1f2933;
+      color: #fff;
+      padding: 1rem 1.5rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+    header p {
+      margin: 0.3rem 0 0;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    main {
+      max-width: 1000px;
+      margin: 1rem auto 2rem;
+      padding: 0 1rem;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      align-items: center;
+    }
+    .controls label {
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .controls select {
+      padding: 0.35rem 0.5rem;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      border: 1px solid #cbd2d9;
+      background: #fff;
+    }
+    .speed-control {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.85rem;
+    }
+    .speed-control input[type="range"] {
+      width: 120px;
+    }
+    #counter {
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+      color: #555;
+    }
+    .list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 0.75rem;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 0.8rem 0.9rem;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+    .card-category {
+      background: #e5e7eb;
+      padding: 0.1rem 0.45rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      white-space: nowrap;
+    }
+    .jp {
+      font-size: 1.15rem;
+      font-weight: 600;
+    }
+    .es {
+      font-size: 0.9rem;
+      color: #374151;
+    }
+    .actions {
+      margin-top: 0.2rem;
+    }
+    .play-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 0.25rem 0.7rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      background: #2563eb;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .play-btn span.icon {
+      font-size: 0.9rem;
+    }
+    .note {
+      font-size: 0.75rem;
+      color: #6b7280;
+      margin-top: 0.75rem;
+    }
+    @media (max-width: 480px) {
+      header h1 {
+        font-size: 1.1rem;
+      }
+      .card {
+        padding: 0.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>日本語基本表現集（スペイン語話者向け）</h1>
+    <p>カテゴリで絞り込んで、日本語音声を聞きながら練習できます。</p>
+  </header>
+
+  <main>
+    <section class="controls">
+      <label for="categoryFilter">
+        カテゴリ:
+        <select id="categoryFilter">
+          <option value="all">すべて / Todas</option>
+        </select>
+      </label>
+
+      <div class="speed-control">
+        <span>読み上げ速度 / Velocidad:</span>
+        <input id="speedRange" type="range" min="0.6" max="1.4" step="0.1" value="1" />
+        <span id="speedValue">1.0x</span>
+      </div>
+    </section>
+
+    <div id="counter"></div>
+
+    <section id="list" class="list"></section>
+
+    <p class="note">
+      ※ 音声はブラウザの Speech Synthesis API を使用しています。<br />
+      Algunos navegadores móviles pueden no soportar bien la síntesis de voz en japonés.
+    </p>
+  </main>
+
+  <script>
+    const expressions = [
+      { no: 1,  jp: "おつかれさまです", category: "あいさつ・コミュニケーション", es: "Buen trabajo / Gracias por tu esfuerzo (お疲れ様です)" },
+      { no: 2,  jp: "おせわになります", category: "あいさつ・コミュニケーション", es: "Gracias por su ayuda / Por tu apoyo (お世話になります)" },
+      { no: 3,  jp: "よろしくおねがいいたします", category: "あいさつ・コミュニケーション", es: "Por favor, cuento contigo (よろしくお願いします)" },
+      { no: 4,  jp: "おそれいります", category: "あいさつ・コミュニケーション", es: "Disculpe las molestias / Le agradezco (恐れ入ります)" },
+      { no: 5,  jp: "ごめいわくをおかけします", category: "あいさつ・コミュニケーション", es: "Lamento las molestias (ご迷惑をおかけします)" },
+      { no: 6,  jp: "すみません", category: "あいさつ・コミュニケーション", es: "Perdón / Gracias / Disculpa (すみません)" },
+      { no: 7,  jp: "いってらっしゃい", category: "あいさつ・コミュニケーション", es: "Que te vaya bien / Vuelve pronto (いってらっしゃい)" },
+      { no: 8,  jp: "ただいま", category: "あいさつ・コミュニケーション", es: "Ya llegué (ただいま)" },
+      { no: 9,  jp: "おかえりなさい", category: "あいさつ・コミュニケーション", es: "Bienvenido a casa (おかえりなさい)" },
+      { no: 10, jp: "いただきます", category: "あいさつ・コミュニケーション", es: "Voy a comer (いただきます - 食事前の感謝)" },
+      { no: 11, jp: "ごちそうさまでした", category: "あいさつ・コミュニケーション", es: "Gracias por la comida (ごちそうさまでした - 食事後の感謝)" },
+      { no: 12, jp: "きょうしゅくです", category: "あいさつ・コミュニケーション", es: "Me siento honrado (恐縮です)" },
+      { no: 13, jp: "しょうしょうおまちください", category: "あいさつ・コミュニケーション", es: "Espere un momento, por favor (少々お待ちください)" },
+      { no: 14, jp: "おじゃまします", category: "あいさつ・コミュニケーション", es: "Permiso (お邪魔します - 訪問時の挨拶)" },
+      { no: 15, jp: "どうぞおかまいなく", category: "あいさつ・コミュニケーション", es: "No se preocupe / No te molestes (どうぞお構いなく)" },
+      { no: 16, jp: "けっこうです", category: "かんじょう・けんそん・はいりょ", es: "No, gracias / Está bien así (結構です - 拒否・遠慮)" },
+      { no: 17, jp: "ちょっとかんがえさせてください", category: "かんじょう・けんそん・はいりょ", es: "Déjame pensarlo un poco (ちょっと考えさせてください)" },
+      { no: 18, jp: "なんともうしますか...", category: "かんじょう・けんそん・はいりょ", es: "Cómo decirlo... (何と申しますか...)" },
+      { no: 19, jp: "もうしわけございません", category: "かんじょう・けんそん・はいりょ", es: "Lo lamento muchísimo (申し訳ございません)" },
+      { no: 20, jp: "とんでもございません", category: "かんじょう・けんそん・はいりょ", es: "De nada / Para nada (とんでもございません - 謙遜)" },
+      { no: 21, jp: "おきづかいなく", category: "かんじょう・けんそん・はいりょ", es: "No te preocupes por mí (お気遣いなく)" },
+      { no: 22, jp: "めんぼくない", category: "かんじょう・けんそん・はいりょ", es: "Estoy muy apenado (面目ない)" },
+      { no: 23, jp: "きょうしゅくながら...", category: "かんじょう・けんそん・はいりょ", es: "Con todo respeto... (恐縮ながら...)" },
+      { no: 24, jp: "びりょくながら", category: "かんじょう・けんそん・はいりょ", es: "Aunque mi ayuda sea modesta (微力ながら)" },
+      { no: 25, jp: "こころばかりですが", category: "かんじょう・けんそん・はいりょ", es: "Es solo un pequeño detalle (心ばかりですが)" },
+      { no: 26, jp: "たいちょうがすぐれない", category: "かんじょう・けんそん・はいりょ", es: "No me siento muy bien (体調がすぐれない)" },
+      { no: 27, jp: "さしつかえなければ", category: "かんじょう・けんそん・はいりょ", es: "Si no es indiscreción / Si no tiene inconveniente (差し支えなければ)" },
+      { no: 28, jp: "ごさしゅうください", category: "かんじょう・けんそん・はいりょ", es: "Por favor, revíselo y acéptelo (ご査収ください)" },
+      { no: 29, jp: "ありがたいおはなしですが...", category: "かんじょう・けんそん・はいりょ", es: "Es una propuesta valiosa, pero... (ありがたいお話ですが...)" },
+      { no: 30, jp: "まあまあですね", category: "かんじょう・けんそん・はいりょ", es: "Bastante bien / Ni bien ni mal (まあまあですね)" },
+      { no: 31, jp: "（くうきを）よむ", category: "しごと・せいかつ・ぶんか", es: "Leer el ambiente (空気を読む - 場の雰囲気を察する)" },
+      { no: 32, jp: "ごうにいっては ごうにしたがえ", category: "しごと・せいかつ・ぶんか", es: "Donde fueres, haz lo que vieres (郷に入っては郷に従え)" },
+      { no: 33, jp: "いちごいちえ", category: "しごと・せいかつ・ぶんか", es: "Una oportunidad que solo ocurre una vez en la vida (一期一会)" },
+      { no: 34, jp: "もったいない", category: "しごと・せいかつ・ぶんか", es: "¡Qué desperdicio! (もったいない)" },
+      { no: 35, jp: "しかたがない", category: "しごと・せいかつ・ぶんか", es: "No se puede evitar / Ni modo (仕方がない)" },
+      { no: 36, jp: "おてすきのさいに", category: "しごと・せいかつ・ぶんか", es: "Cuando tenga tiempo libre (お手すきの際に)" },
+      { no: 37, jp: "ごもっともです", category: "しごと・せいかつ・ぶんか", es: "Tiene toda la razón (ごもっともです)" },
+      { no: 38, jp: "ねんのため", category: "しごと・せいかつ・ぶんか", es: "Por si acaso / Como precaución (念のため)" },
+      { no: 39, jp: "ぜんもんどうのようだ", category: "しごと・せいかつ・ぶんか", es: "Parece un 'koan' Zen (禅問答のようだ - 答えのない問答)" },
+      { no: 40, jp: "おあいそおねがいします", category: "しごと・せいかつ・ぶんか", es: "La cuenta, por favor (おあいそお願いします - 会計時)" },
+      { no: 41, jp: "ことぶきたいしゃ", category: "しごと・せいかつ・ぶんか", es: "Renuncia por matrimonio (寿退社)" },
+      { no: 42, jp: "たてまえとほんね", category: "しごと・せいかつ・ぶんか", es: "Apariencia y verdadera intención (建前と本音)" },
+      { no: 43, jp: "はなよりだんご", category: "しごと・せいかつ・ぶんか", es: "Más vale lo útil que lo bello (花より団子)" },
+      { no: 44, jp: "おひきたてのほど", category: "しごと・せいかつ・ぶんか", es: "Agradeceríamos su continuo patrocinio (お引き立てのほど)" },
+      { no: 45, jp: "おてやわらかに", category: "しごと・せいかつ・ぶんか", es: "Sé indulgente, por favor (お手柔らかに - 手加減を頼む)" },
+      { no: 46, jp: "ごぶさたしております", category: "しごと・せいかつ・ぶんか", es: "Hace mucho que no nos vemos (ご無沙汰しております)" },
+      { no: 47, jp: "おかげさまで", category: "しごと・せいかつ・ぶんか", es: "Gracias a usted / Afortunadamente (おかげさまで)" },
+      { no: 48, jp: "あんばい", category: "しごと・せいかつ・ぶんか", es: "El punto justo / Condición (塩梅)" },
+      { no: 49, jp: "せけんてい", category: "しごと・せいかつ・ぶんか", es: "Apariencia pública / Lo que dirá la gente (世間体)" },
+      { no: 50, jp: "けっこうなおてまえで", category: "しごと・せいかつ・ぶんか", es: "Una ceremonia de té excelente (結構なお点前で - 褒め言葉)" }
+    ];
+
+    const listEl = document.getElementById("list");
+    const categoryEl = document.getElementById("categoryFilter");
+    const counterEl = document.getElementById("counter");
+    const speedRange = document.getElementById("speedRange");
+    const speedValue = document.getElementById("speedValue");
+
+    let voices = [];
+    let jpVoice = null;
+
+    function loadVoices() {
+      voices = window.speechSynthesis.getVoices();
+      jpVoice =
+        voices.find(v => v.lang && v.lang.toLowerCase().startsWith("ja")) ||
+        null;
+    }
+
+    if ("speechSynthesis" in window) {
+      loadVoices();
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    function speakJapanese(text) {
+      if (!("speechSynthesis" in window)) {
+        alert("音声読み上げがこのブラウザでは利用できません。 / La síntesis de voz no está disponible en este navegador.");
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = "ja-JP";
+      if (jpVoice) {
+        u.voice = jpVoice;
+      }
+      const rate = parseFloat(speedRange.value) || 1.0;
+      u.rate = rate;
+      window.speechSynthesis.speak(u);
+    }
+
+    function renderCategories() {
+      const categories = Array.from(
+        new Set(expressions.map(e => e.category))
+      ).sort();
+      categories.forEach(cat => {
+        const opt = document.createElement("option");
+        opt.value = cat;
+        opt.textContent = cat;
+        categoryEl.appendChild(opt);
+      });
+    }
+
+    function renderList() {
+      const cat = categoryEl.value;
+      const filtered = expressions.filter(item => {
+        return cat === "all" || item.category === cat;
+      });
+
+      counterEl.textContent = `表示件数 / Mostrando: ${filtered.length} / ${expressions.length}`;
+
+      listEl.innerHTML = filtered
+        .map(item => {
+          return `
+          <article class="card">
+            <div class="card-header">
+              <span>No.${item.no}</span>
+              <span class="card-category">${item.category}</span>
+            </div>
+            <div class="jp">${item.jp}</div>
+            <div class="es">${item.es}</div>
+            <div class="actions">
+              <button class="play-btn" data-jp="${item.jp}">
+                <span class="icon">▶</span>
+                <span>再生 / Escuchar</span>
+              </button>
+            </div>
+          </article>
+        `;
+        })
+        .join("");
+    }
+
+    listEl.addEventListener("click", (e) => {
+      const btn = e.target.closest(".play-btn");
+      if (!btn) return;
+      const text = btn.getAttribute("data-jp");
+      if (text) {
+        speakJapanese(text);
+      }
+    });
+
+    speedRange.addEventListener("input", () => {
+      speedValue.textContent = speedRange.value + "x";
+    });
+
+    renderCategories();
+    renderList();
+  </script>
+</body>
+</html>
