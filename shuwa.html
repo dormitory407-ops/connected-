@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>手話・指文字トレーニング</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    #words {
+      margin: 40px 0;
+      font-size: 2em;
+    }
+    #maxMessage {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #ffcc00;
+      color: #000;
+      font-size: 4em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 1.5em;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    button:active {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>手話・指文字トレーニング</h1>
+  <div id="words"></div>
+  <button onclick="nextWords()">次へ</button>
+
+  <div id="maxMessage">お先MAX！</div>
+
+  <script>
+    const wordList = [
+      "あきみ","ぶたろ","ぱのえ","ざゆき","ごろも",
+      "びろた","えりご","のぞび","だけし","みおり",
+      "まざと","ゆがり","かずの","りんご","ぜりな",
+      "ともべ","はるぎ","なおみ","みづる","ゆうだ",
+      "あやね","ざとし","びなた","のりご","まなぶ",
+      "たえご","けんど","みさぎ","りょう","さやが",
+      "しおり","ひろび","あおい","まごと","ゆりが",
+      "たくや","のどが","みづき","はなべ","げいた",
+      "ざとみ","びかる","あぎら","まなぎ","ゆうご",
+      "だつや","みのり","りなご","しょう","かばた",
+      "ばなみ","ぱるこ","ざくや","ぎんた","ぴろえ",
+      "めぐろ","どりか","ばすけ","ぴえろ","がんた",
+      "ふうか","ばくや","ぎょた","ぴのき","ずみえ",
+      "ごうた","ぱなこ","ばくと","ぎんえ","ぴろた",
+      "もりか","ずんた","ばのえ","ぎんみ","ぴえき",
+      "ざみこ","ぴろき","ばるた","ぎょうか","ふぴた",
+      "ぱんご","ざのり","ばりこ","ぎんたろ","ぴんた",
+      "ばなご","ぱのき","ざるた","ぎょみ","ぴろこ",
+      "ふたろ","ばみえ","ぎんこ","ぴたん","ざくろ"
+    ];
+
+    let index = 0;
+
+    function nextWords() {
+      const display = document.getElementById('words');
+      const maxMessage = document.getElementById('maxMessage');
+
+      // 3つずつ表示
+      const wordsToShow = [];
+      for (let i = 0; i < 3; i++) {
+        wordsToShow.push(wordList[index]);
+        index = (index + 1) % wordList.length;
+      }
+      display.textContent = wordsToShow.join("　");
+
+      // お先MAX!表示
+      maxMessage.style.display = 'flex';
+      setTimeout(() => {
+        maxMessage.style.display = 'none';
+      }, 1500);
+    }
+
+    // 初回表示
+    nextWords();
+  </script>
+</body>
+</html>
