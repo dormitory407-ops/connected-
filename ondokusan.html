@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>English Reading Trainer</title>
+  <style>
+    body { font-family: system-ui; max-width: 800px; margin: 0 auto;
+           padding: 16px; background: #f5f5f5; }
+    h1 { text-align: center; }
+    .card { background: #fff; padding: 16px; border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    textarea { width: 100%; height: 180px; padding: 10px; font-size: 1rem;
+               border-radius: 6px; border: 1px solid #ccc; }
+    label { font-weight: 600; margin-top: 10px; display: block; }
+    select, input[type="range"] { width: 100%; margin-top: 6px; }
+    .range-row { display: flex; align-items: center; gap: 10px; }
+    .buttons { margin-top: 16px; display: flex; justify-content: center; gap: 12px; }
+    button { padding: 8px 18px; border-radius: 20px; border: none;
+             cursor: pointer; font-weight: 600; color: white; }
+    #playBtn { background: #4caf50; }
+    #stopBtn { background: #f44336; }
+  </style>
+</head>
+<body>
+  <h1>English Reading Trainer</h1>
+  <div class="card">
+    <label>1. Enter English text:</label>
+    <textarea id="textInput" placeholder="Type English text here..."></textarea>
+
+    <label>2. Choose accent:</label>
+    <select id="accentSelect">
+      <option value="american">American English</option>
+      <option value="british">British English</option>
+    </select>
+
+    <label>3. Speed (0.6 - 1.2):</label>
+    <div class="range-row">
+      <span id="rateLabel">Speed: 1.0</span>
+      <input type="range" id="rateRange" min="0.6" max="1.2"
+             step="0.1" value="1.0">
+    </div>
+
+    <div class="buttons">
+      <button id="playBtn">▶ Play</button>
+      <button id="stopBtn">■ Stop</button>
+    </div>
+  </div>
+
+  <script>
+    const textInput = document.getElementById("textInput");
+    const accentSelect = document.getElementById("accentSelect");
+    const rateSelect = document.getElementById("rateRange");
+    const rateLabel = document.getElementById("rateLabel");
+
+    let voices = [];
+    speechSynthesis.onvoiceschanged = () => {
+      voices = speechSynthesis.getVoices();
+    };
+
+    rateSelect.addEventListener("input", () => {
+      rateLabel.textContent = "Speed: " + rateSelect.value;
+    });
+
+    function findVoice(accent) {
+      if (!voices.length) voices = speechSynthesis.getVoices();
+
+      const prefix = accent === "british" ? "en-GB" : "en-US";
+      let filtered = voices.filter(v => v.lang && v.lang.startsWith(prefix));
+
+      if (!filtered.length) {
+        filtered = voices.filter(v => v.lang && v.lang.startsWith("en-"));
+      }
+
+      return filtered[0] || null;
+    }
+
+    document.getElementById("playBtn").addEventListener("click", () => {
+      const text = textInput.value.trim();
+      if (!text) { alert("Please enter text."); return; }
+
+      speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.rate = parseFloat(rateSelect.value);
+
+      const voice = findVoice(accentSelect.value);
+      if (voice) {
+        utter.voice = voice;
+        utter.lang = voice.lang;
+      }
+
+      speechSynthesis.speak(utter);
+    });
+
+    document.getElementById("stopBtn").addEventListener("click", () => {
+      speechSynthesis.cancel();
+    });
+  </script>
+</body>
+</html>
